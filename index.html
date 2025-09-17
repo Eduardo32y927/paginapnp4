@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plataforma Anticorrupción - PNP Ica</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      /* Fondo con degradado */
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
+    }
+    header {
+      background: rgba(0,0,0,0.7);
+      text-align: center;
+      padding: 20px;
+      border-bottom: 3px solid #ffcc00;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2em;
+      color: #ffcc00;
+    }
+    .container {
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+    }
+    .form-container, .cases-container {
+      background: rgba(255,255,255,0.08);
+      padding: 20px;
+      border-radius: 10px;
+      flex: 1;
+      overflow-y: auto;
+      max-height: 85vh;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: none;
+      border-radius: 5px;
+    }
+    button {
+      background: #ffcc00;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    button:hover {
+      background: #e6b800;
+    }
+    .case {
+      background: rgba(0,0,0,0.5);
+      margin-bottom: 15px;
+      padding: 15px;
+      border-radius: 8px;
+    }
+    .case h3 {
+      margin: 0 0 10px;
+      color: #ffcc00;
+    }
+    .details {
+      display: none;
+      margin-top: 10px;
+      font-size: 0.9em;
+      line-height: 1.4em;
+      color: #eee;
+    }
+    .acciones {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .btn {
+      padding: 6px 10px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+    }
+    .btn.sec {
+      background: #ccc;
+      color: #000;
+    }
+    .btn.warn {
+      background: #ff4444;
+      color: #fff;
+    }
+    .label-denunciado {
+      background: #ff4444;
+      color: #fff;
+      padding: 3px 6px;
+      border-radius: 5px;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Plataforma Anticorrupción de la PNP Ica</h1>
+    <p>Regístrate, revisa casos de corrupción y presenta tu denuncia.</p>
+  </header>
+
+  <div class="container">
+    <!-- Registro -->
+    <div class="form-container">
+      <h2>Registro</h2>
+      <form id="registroForm">
+        <label>Nombre completo:</label>
+        <input type="text" required>
+
+        <label>Correo institucional:</label>
+        <input type="email" required>
+
+        <label>Edad:</label>
+        <input type="number" required>
+
+        <label>DNI:</label>
+        <input type="text" required>
+
+        <label>Sector PNP:</label>
+        <select required>
+          <option value="">Seleccione</option>
+          <option>Ica</option>
+          <option>Pisco</option>
+          <option>Chincha</option>
+          <option>Nasca</option>
+          <option>Palpa</option>
+        </select>
+
+        <button type="submit">Registrarse</button>
+      </form>
+    </div>
+
+    <!-- Casos -->
+    <div class="cases-container">
+      <h2>Casos de corrupción</h2>
+      <div id="casesList"></div>
+    </div>
+  </div>
+
+  <script>
+    const casos = [
+      {
+        id: 1,
+        titulo: "Sobornos por permisos de tránsito",
+        lugar: "Comisaría Pisco",
+        fecha: "2025-03-12",
+        descripcion: "Denuncias públicas sobre oficiales que habrían cobrado dinero para eximir infracciones de tránsito en la vía costera.",
+        evidencia: "Fotos de billetes, mensajes de cobro y testimonios de comerciantes locales.",
+        detalles: `
+          <ul>
+            <li><strong>Responsables investigados:</strong> Dos suboficiales de tránsito.</li>
+            <li><strong>Modalidad:</strong> Cobros en efectivo a conductores a cambio de no registrar papeletas.</li>
+            <li><strong>Fuente:</strong> Informe de la Fiscalía Anticorrupción (marzo 2025).</li>
+            <li><strong>Estado actual:</strong> Investigación preliminar en curso.</li>
+          </ul>
+        `,
+        denunciado: false
+      },
+      {
+        id: 2,
+        titulo: "Desvío de fondos de operativos",
+        lugar: "Comisaría Ica",
+        fecha: "2024-11-05",
+        descripcion: "Presunta apropiación de fondos asignados a operativos nocturnos. Contabilidad irregular detectada por supervisores.",
+        evidencia: "Comprobantes faltantes, extractos y testimonio de ex miembro del personal.",
+        detalles: `
+          <ul>
+            <li><strong>Monto involucrado:</strong> Aproximadamente S/ 50,000.</li>
+            <li><strong>Responsables:</strong> Personal administrativo de la comisaría.</li>
+            <li><strong>Fuente:</strong> Auditoría interna de la Región Policial Ica (noviembre 2024).</li>
+            <li><strong>Estado:</strong> Denunciado al Ministerio Público.</li>
+          </ul>
+        `,
+        denunciado: false
+      },
+      {
+        id: 3,
+        titulo: "Cobro de coimas en puestos de control",
+        lugar: "Comisaría Chincha",
+        fecha: "2025-01-21",
+        descripcion: "Reportes de cobros arbitrarios en controles de carretera a transportistas y camioneros.",
+        evidencia: "Grabaciones de audio y declaración de transportistas.",
+        detalles: `
+          <ul>
+            <li><strong>Zona afectada:</strong> Carretera Panamericana Sur, km 204.</li>
+            <li><strong>Monto promedio:</strong> S/ 20 – 50 por vehículo.</li>
+            <li><strong>Fuente:</strong> Reportaje de prensa local y declaraciones ante la Fiscalía.</li>
+            <li><strong>Estado:</strong> 3 efectivos bajo investigación disciplinaria.</li>
+          </ul>
+        `,
+        denunciado: false
+      },
+      {
+        id: 4,
+        titulo: "Irregularidades en entrega de material incautado",
+        lugar: "Comisaría Nasca",
+        fecha: "2024-09-30",
+        descripcion: "Sospechas de venta no registrada de material incautado en operativos.",
+        evidencia: "Actas incompletas y testigos que reportan entrega fuera de almacén.",
+        detalles: `
+          <ul>
+            <li><strong>Material comprometido:</strong> 12 laptops y 8 motocicletas incautadas.</li>
+            <li><strong>Responsables señalados:</strong> Personal del almacén y un oficial de guardia.</li>
+            <li><strong>Fuente:</strong> Informe de Contraloría (octubre 2024).</li>
+            <li><strong>Estado:</strong> Proceso administrativo abierto.</li>
+          </ul>
+        `,
+        denunciado: false
+      }
+    ];
+
+    const casesList = document.getElementById("casesList");
+
+    function renderCasos() {
+      casesList.innerHTML = "";
+      casos.forEach(c => {
+        const card = document.createElement("div");
+        card.classList.add("case");
+        card.innerHTML = `
+          <h3>${c.titulo}</h3>
+          <p><strong>Lugar:</strong> ${c.lugar}</p>
+          <p><strong>Fecha:</strong> ${c.fecha}</p>
+          <p><strong>Descripción:</strong> ${c.descripcion}</p>
+          <p><strong>Evidencia:</strong> ${c.evidencia}</p>
+          <div class="details" id="detalles-${c.id}">
+            ${c.detalles}
+          </div>
+          <div class="acciones">
+            <button class="btn sec" onclick="toggleDetalles(${c.id})">Ver detalles</button>
+            <button class="btn warn" onclick="denunciar(${c.id})">Denunciar</button>
+          </div>
+          ${c.denunciado ? '<span class="label-denunciado">Denunciado</span>' : ''}
+        `;
+        casesList.appendChild(card);
+      });
+    }
+
+    function toggleDetalles(id) {
+      const el = document.getElementById(`detalles-${id}`);
+      if (!el) return;
+      el.style.display = el.style.display === "none" ? "block" : "none";
+    }
+
+    function denunciar(id) {
+      const caso = casos.find(c => c.id === id);
+      if (caso) {
+        caso.denunciado = true;
+        alert("Has denunciado el caso: " + caso.titulo + ". Gracias por tu aporte.");
+        renderCasos();
+      }
+    }
+
+    renderCasos();
+  </script>
+</body>
+</html>
+
